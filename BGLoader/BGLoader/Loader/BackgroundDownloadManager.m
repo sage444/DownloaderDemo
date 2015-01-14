@@ -117,8 +117,9 @@ static dispatch_queue_t url_session_manager_creation_queue() {
                 if (!downloadTask) {
                     NSString * errorFormat = @"Failed create download task for session: %@, download task for url: '%@'";
                     NSString * errorDescription = [NSString stringWithFormat:errorFormat, self.backgroundSession, downloadUrl];
-                    NSError * error = [self downloadError];
+                    
                     if (failure)  {
+                        NSError * error = nil;
                         error = [NSError errorWithDomain:BackgroundDownloadManagerErrorDomain
                                                                                     code:0
                                                                                 userInfo:@{ NSLocalizedDescriptionKey: errorDescription}];
@@ -148,9 +149,7 @@ static dispatch_queue_t url_session_manager_creation_queue() {
                         }
                         
                         if (error && failure)  {
-                            NSError * downloadError = [self downloadError];
-                            downloadError = error;
-                            failure(downloadError);
+                            failure(error);
                         }
                     }
                 } failure:^(NSError *error) {
@@ -423,11 +422,11 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
         return nil;
 }
 
--(void)saveFileFromUrl:(NSURL*)sourceURL toLocalPath:(NSString*)localPath error:(NSError**)err{
+-(BOOL)saveFileFromUrl:(NSURL*)sourceURL toLocalPath:(NSString*)localPath error:(NSError**)err{
     NSFileManager * fm = [NSFileManager new];
     NSURL * localUrl = [NSURL fileURLWithPath:localPath];
     [fm moveItemAtURL:sourceURL toURL:localUrl error:err];
-    
+    return err == nil;
 }
 
 

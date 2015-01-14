@@ -54,7 +54,7 @@
  didResumeAtOffset:(int64_t)fileOffset
 expectedTotalBytes:(int64_t)expectedTotalBytes {
     if(_progressHandler) {
-        _progressHandler(fileOffset, fileOffset, expectedTotalBytes);
+        _progressHandler((int)fileOffset, fileOffset, expectedTotalBytes);
     }
 }
 
@@ -76,7 +76,7 @@ didFinishDownloadingToURL:(NSURL *)location {
  totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     if(_progressHandler) {
-        _progressHandler(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+        _progressHandler((int)bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     }
 }
 
